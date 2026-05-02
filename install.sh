@@ -33,4 +33,24 @@ echo -e "\033[32mCreating symlink: $OPENCODE_DIR -> $REPO_DIR/opencode\033[0m"
 ln -sfn "$REPO_DIR/opencode" "$OPENCODE_DIR"
 
 echo -e "\033[32mDone! Your OpenCode config is now synced.\033[0m"
-echo -e "\033[90mTo update: cd $REPO_DIR && git pull\033[0m"
+
+# Offer to setup auto-sync
+read -p "Setup auto-sync on terminal startup? (y/n) " setup_auto_sync
+if [ "$setup_auto_sync" = "y" ] || [ "$setup_auto_sync" = "Y" ]; then
+    shell_rc="$HOME/.bashrc"
+    if [ -f "$HOME/.zshrc" ]; then
+        shell_rc="$HOME/.zshrc"
+    fi
+    
+    auto_sync_line="source $REPO_DIR/bin/auto-sync.sh"
+    if ! grep -q "$auto_sync_line" "$shell_rc" 2>/dev/null; then
+        echo "" >> "$shell_rc"
+        echo "# Auto-sync OpenCode dotfiles" >> "$shell_rc"
+        echo "$auto_sync_line" >> "$shell_rc"
+        echo -e "\033[32mAuto-sync enabled in $shell_rc! Run: source $shell_rc\033[0m"
+    else
+        echo -e "\033[33mAuto-sync already configured.\033[0m"
+    fi
+fi
+
+echo -e "\033[90mTo manually sync: cd $REPO_DIR && git pull/push\033[0m"

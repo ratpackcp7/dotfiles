@@ -28,4 +28,22 @@ Write-Host "Creating junction: $opencodeDir -> $repoDir\opencode" -ForegroundCol
 cmd /c mklink /J "$opencodeDir" "$repoDir\opencode" | Out-Null
 
 Write-Host "Done! Your OpenCode config is now synced." -ForegroundColor Green
-Write-Host "To update: cd $repoDir && git pull" -ForegroundColor Gray
+
+# Offer to setup auto-sync
+$setupAutoSync = Read-Host "Setup auto-sync on terminal startup? (y/n)"
+if ($setupAutoSync -eq 'y' -or $setupAutoSync -eq 'Y') {
+    $profilePath = $PROFILE
+    if (-not (Test-Path $profilePath)) {
+        New-Item -ItemType File -Path $profilePath -Force | Out-Null
+    }
+    
+    $autoSyncLine = ". `$HOME\dotfiles\bin\auto-sync.ps1"
+    if (-not (Select-String -Path $profilePath -Pattern $autoSyncLine -Quiet)) {
+        Add-Content -Path $profilePath -Value "`n# Auto-sync OpenCode dotfiles`n$autoSyncLine"
+        Write-Host "Auto-sync enabled! Restart your terminal to activate." -ForegroundColor Green
+    } else {
+        Write-Host "Auto-sync already configured." -ForegroundColor Yellow
+    }
+}
+
+Write-Host "`nTo manually sync: cd $repoDir && git pull/push" -ForegroundColor Gray

@@ -33,19 +33,44 @@ cd ~/dotfiles
 - `opencode/skills/` — Custom OpenCode skills (empty, add your own)
 - `opencode/agents/` — Custom agents (empty, add your own)
 
-## Keeping Synced
+## Set and Forget Auto-Sync
 
-**Pull latest configs:**
+### Option 1: Auto-Pull on Terminal Open (Recommended)
+
+**Linux/macOS:** Add to `~/.bashrc` or `~/.zshrc`:
 ```bash
-cd ~/dotfiles && git pull
+# Auto-sync OpenCode dotfiles
+source ~/dotfiles/bin/auto-sync.sh
 ```
 
-**Push local changes:**
+**Windows:** Add to your PowerShell profile (`$PROFILE`):
+```powershell
+# Auto-sync OpenCode dotfiles
+. $HOME\dotfiles\bin\auto-sync.ps1
+```
+
+Now every new terminal silently pulls the latest configs.
+
+### Option 2: Auto-Push Changes
+
+**Linux/macOS** — Run in background:
+```bash
+nohup ~/dotfiles/bin/auto-push.sh > ~/.dotfiles-sync.log 2>&1 &
+```
+
+**Windows** — Run as background job:
+```powershell
+Start-Job -FilePath "$HOME\dotfiles\bin\auto-push.ps1"
+```
+
+This checks every 5 minutes for local changes and auto-commits/pushes them.
+
+### Option 3: Manual Sync (If you prefer control)
+
 ```bash
 cd ~/dotfiles
-git add -A
-git commit -m "update opencode config"
-git push
+git pull   # get updates
+git push   # share your changes
 ```
 
 ## Security Notes
