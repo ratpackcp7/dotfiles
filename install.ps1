@@ -23,9 +23,9 @@ if (Test-Path $opencodeDir) {
     Move-Item -Path $opencodeDir -Destination $backupDir
 }
 
-# Create symlink
-Write-Host "Creating symlink: $opencodeDir -> $repoDir\opencode" -ForegroundColor Green
-New-Item -ItemType SymbolicLink -Path $opencodeDir -Target "$repoDir\opencode" | Out-Null
+# Create junction (Windows equivalent of symlink, no admin needed)
+Write-Host "Creating junction: $opencodeDir -> $repoDir\opencode" -ForegroundColor Green
+cmd /c mklink /J "$opencodeDir" "$repoDir\opencode" | Out-Null
 
 Write-Host "Done! Your OpenCode config is now synced." -ForegroundColor Green
 Write-Host "To update: cd $repoDir && git pull" -ForegroundColor Gray
