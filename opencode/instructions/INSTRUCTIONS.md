@@ -299,16 +299,31 @@ interface Repository<T> {
 
 ---
 
-## OpenCode-Specific Notes
+## OpenCode Plugin System
 
-Since OpenCode does not support hooks, the following actions that were automated in Claude Code must be done manually:
+OpenCode supports a plugin system with hooks for automation. CP7 provides plugins that handle many workflow tasks automatically.
 
-### After Writing/Editing Code
+### Available CP7 Plugins
+
+Place these in `.opencode/plugins/` (project) or `~/.config/opencode/plugins/` (global):
+
+| Plugin | File | What It Does |
+|--------|------|-------------|
+| Session Save | `cp7-session-save.ts` | Auto-saves to `.cp7/sessions/` on idle |
+| Pre-Push Gate | `cp7-pre-push.ts` | Runs tests + doc checks before git push |
+| Security Gate | `cp7-security-gate.ts` | Blocks commits with secrets |
+| Format on Save | `cp7-format-on-save.ts` | Auto-formats edited files |
+
+### Manual Fallbacks
+
+If plugins are not installed, run these manually:
+
+**After Writing/Editing Code:**
 - Run `prettier --write <file>` to format JS/TS files
 - Run `npx tsc --noEmit` to check for TypeScript errors
 - Check for console.log statements and remove them
 
-### Before Committing
+**Before Committing:**
 - Run security checks manually
 - Verify no secrets in code
 - Run full test suite
@@ -324,6 +339,16 @@ Use these commands in OpenCode:
 - `/e2e` - Generate E2E tests
 - `/refactor-clean` - Remove dead code
 - `/orchestrate` - Multi-agent workflow
+
+### Plugin Events
+
+OpenCode supports these hook events for custom automation:
+- `tool.execute.before` / `tool.execute.after`
+- `file.edited`
+- `session.idle` / `session.compacted`
+- `command.executed`
+
+See: https://opencode.ai/docs/plugins
 
 ---
 
