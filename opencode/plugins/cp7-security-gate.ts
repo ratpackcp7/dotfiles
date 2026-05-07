@@ -38,8 +38,8 @@ export const CP7SecurityGate: Plugin = async ({ $, directory }) => {
         return
       }
 
-      const filePath = input.args.filePath || ""
-      const content = input.args.content || input.args.newString || ""
+      const filePath = input.args?.filePath || ""
+      const content = input.args?.content || input.args?.newString || ""
 
       // Skip check for non-code files
       if (!/\.(py|js|ts|jsx|tsx|go|rs|java|rb|php)$/i.test(filePath)) {

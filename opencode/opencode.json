@@ -25,19 +25,30 @@
     ]
   },
   "plugin": [
+    "opentmux",
     "./plugins",
-    "./custom-plugins"
+    "./custom-plugins",
+    "opencode-agent-tmux"
   ],
   "mcp": {
     "notion": {
       "type": "remote",
       "url": "https://mcp.notion.com/mcp",
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer ${NOTION_TOKEN}"
+      }
+    },
+    "playwright": {
+      "type": "remote",
+      "url": "https://playwright.cp7.dev/mcp",
       "enabled": true
     }
   },
   "permission": {
     "mcp_notion*": "allow",
-    "mcp_*": "ask"
+    "mcp_*": "ask",
+    "mcp_playwright*": "allow"
   },
   "instructions": [],
   "agent": {

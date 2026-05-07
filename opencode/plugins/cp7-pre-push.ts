@@ -15,7 +15,7 @@ export const CP7PrePush: Plugin = async ({ $, directory }) => {
   return {
     "tool.execute.before": async (input, output) => {
       // Only intercept git push commands
-      if (input.tool !== "bash" || !input.args.command?.includes("git push")) {
+      if (input.tool !== "bash" || !input.args?.command?.includes("git push")) {
         return
       }
 
