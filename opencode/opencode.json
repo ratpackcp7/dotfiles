@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "kimi-for-coding/k2p6",
-  "small_model": "kimi-for-coding/k2p6",
+  "model": "openrouter/deepseek/deepseek-v4-flash-0731",
+  "small_model": "openrouter/deepseek/deepseek-v4-flash-0731",
   "default_agent": "build",
   "autoupdate": true,
   "share": "manual",
@@ -28,17 +28,10 @@
     "opentmux",
     "./plugins",
     "./custom-plugins",
-    "opencode-agent-tmux"
+    "opencode-agent-tmux",
+    "@dietrichgebert/ponytail"
   ],
   "mcp": {
-    "notion": {
-      "type": "remote",
-      "url": "https://mcp.notion.com/mcp",
-      "enabled": true,
-      "headers": {
-        "Authorization": "Bearer ${NOTION_TOKEN}"
-      }
-    },
     "playwright": {
       "type": "remote",
       "url": "https://playwright.cp7.dev/mcp",
@@ -46,7 +39,6 @@
     }
   },
   "permission": {
-    "mcp_notion*": "allow",
     "mcp_*": "ask",
     "mcp_playwright*": "allow"
   },
@@ -55,7 +47,7 @@
     "build": {
       "description": "Primary coding agent for development work",
       "mode": "primary",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "tools": {
         "write": true,
         "edit": true,
@@ -65,25 +57,23 @@
       }
     },
     "planner": {
-      "description": "Expert planning specialist for complex features and refactoring. Use for implementation planning, architectural changes, or complex refactoring.",
+      "description": "Read-only. May not edit files, commit, or push.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
       "prompt": "{file:prompts/agents/planner.txt}",
       "tools": {
         "read": true,
-        "bash": true,
+        "bash": false,
         "write": false,
         "edit": false
       }
     },
     "architect": {
-      "description": "Software architecture specialist for system design, scalability, and technical decision-making.",
+      "description": "Read-only. May not edit files, commit, or push.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
       "prompt": "{file:prompts/agents/architect.txt}",
       "tools": {
         "read": true,
-        "bash": true,
+        "bash": false,
         "write": false,
         "edit": false
       }
@@ -91,7 +81,7 @@
     "code-reviewer": {
       "description": "Expert code review specialist. Reviews code for quality, security, and maintainability. Use immediately after writing or modifying code.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/code-reviewer.txt}",
       "tools": {
         "read": true,
@@ -103,7 +93,7 @@
     "security-reviewer": {
       "description": "Security vulnerability detection and remediation specialist. Use after writing code that handles user input, authentication, API endpoints, or sensitive data.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/security-reviewer.txt}",
       "tools": {
         "read": true,
@@ -115,7 +105,7 @@
     "tdd-guide": {
       "description": "Test-Driven Development specialist enforcing write-tests-first methodology. Use when writing new features, fixing bugs, or refactoring code. Ensures 80%+ test coverage.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/tdd-guide.txt}",
       "tools": {
         "read": true,
@@ -127,7 +117,7 @@
     "build-error-resolver": {
       "description": "Build and TypeScript error resolution specialist. Use when build fails or type errors occur. Fixes build/type errors only with minimal diffs.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/build-error-resolver.txt}",
       "tools": {
         "read": true,
@@ -139,7 +129,7 @@
     "e2e-runner": {
       "description": "End-to-end testing specialist using Playwright. Generates, maintains, and runs E2E tests for critical user flows.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/e2e-runner.txt}",
       "tools": {
         "read": true,
@@ -151,7 +141,7 @@
     "doc-updater": {
       "description": "Documentation and codemap specialist. Use for updating codemaps and documentation.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/doc-updater.txt}",
       "tools": {
         "read": true,
@@ -163,7 +153,7 @@
     "refactor-cleaner": {
       "description": "Dead code cleanup and consolidation specialist. Use for removing unused code, duplicates, and refactoring.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/refactor-cleaner.txt}",
       "tools": {
         "read": true,
@@ -172,70 +162,21 @@
         "bash": true
       }
     },
-    "go-reviewer": {
-      "description": "Expert Go code reviewer specializing in idiomatic Go, concurrency patterns, error handling, and performance.",
-      "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
-      "prompt": "{file:prompts/agents/go-reviewer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "write": false,
-        "edit": false
-      }
-    },
-    "go-build-resolver": {
-      "description": "Go build, vet, and compilation error resolution specialist. Fixes Go build errors with minimal changes.",
-      "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
-      "prompt": "{file:prompts/agents/go-build-resolver.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
     "database-reviewer": {
-      "description": "PostgreSQL database specialist for query optimization, schema design, security, and performance. Incorporates Supabase best practices.",
+      "description": "Read-only. May not edit files, commit, or push.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
       "prompt": "{file:prompts/agents/database-reviewer.txt}",
       "tools": {
         "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "cpp-reviewer": {
-      "description": "Expert C++ code reviewer specializing in memory safety, modern C++ idioms, concurrency, and performance. Use for all C++ code changes.",
-      "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
-      "prompt": "{file:prompts/agents/cpp-reviewer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
+        "bash": false,
         "write": false,
         "edit": false
-      }
-    },
-    "cpp-build-resolver": {
-      "description": "C++ build, CMake, and compilation error resolution specialist. Fixes build errors, linker issues, and template errors with minimal changes.",
-      "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
-      "prompt": "{file:prompts/agents/cpp-build-resolver.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
       }
     },
     "docs-lookup": {
       "description": "Documentation specialist using Context7 MCP to fetch current library and API documentation with code examples.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/docs-lookup.txt}",
       "tools": {
         "read": true,
@@ -247,7 +188,7 @@
     "harness-optimizer": {
       "description": "Analyze and improve the local agent harness configuration for reliability, cost, and throughput.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/harness-optimizer.txt}",
       "tools": {
         "read": true,
@@ -255,58 +196,10 @@
         "edit": true
       }
     },
-    "java-reviewer": {
-      "description": "Expert Java and Spring Boot code reviewer specializing in layered architecture, JPA patterns, security, and concurrency.",
-      "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
-      "prompt": "{file:prompts/agents/java-reviewer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "write": false,
-        "edit": false
-      }
-    },
-    "java-build-resolver": {
-      "description": "Java/Maven/Gradle build, compilation, and dependency error resolution specialist. Fixes build errors with minimal changes.",
-      "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
-      "prompt": "{file:prompts/agents/java-build-resolver.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "kotlin-reviewer": {
-      "description": "Kotlin and Android/KMP code reviewer. Reviews Kotlin code for idiomatic patterns, coroutine safety, Compose best practices.",
-      "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
-      "prompt": "{file:prompts/agents/kotlin-reviewer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "write": false,
-        "edit": false
-      }
-    },
-    "kotlin-build-resolver": {
-      "description": "Kotlin/Gradle build, compilation, and dependency error resolution specialist. Fixes Kotlin build errors with minimal changes.",
-      "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
-      "prompt": "{file:prompts/agents/kotlin-build-resolver.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
     "loop-operator": {
       "description": "Operate autonomous agent loops, monitor progress, and intervene safely when loops stall.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/loop-operator.txt}",
       "tools": {
         "read": true,
@@ -317,7 +210,7 @@
     "python-reviewer": {
       "description": "Expert Python code reviewer specializing in PEP 8 compliance, Pythonic idioms, type hints, security, and performance.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/python-reviewer.txt}",
       "tools": {
         "read": true,
@@ -329,7 +222,7 @@
     "rust-reviewer": {
       "description": "Expert Rust code reviewer specializing in idiomatic Rust, ownership, lifetimes, concurrency, and performance.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/rust-reviewer.txt}",
       "tools": {
         "read": true,
@@ -341,13 +234,68 @@
     "rust-build-resolver": {
       "description": "Rust build, Cargo, and compilation error resolution specialist. Fixes Rust build errors with minimal changes.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p6",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "{file:prompts/agents/rust-build-resolver.txt}",
       "tools": {
         "read": true,
         "write": true,
         "edit": true,
         "bash": true
+      }
+    },
+    "builder": {
+      "description": "Edit-capable when SPEC permits.",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/builder.txt}",
+      "tools": {
+        "read": true,
+        "bash": true,
+        "write": true,
+        "edit": true
+      }
+    },
+    "debugger": {
+      "description": "Edit-capable when SPEC permits.",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/debugger.txt}",
+      "tools": {
+        "read": true,
+        "bash": true,
+        "write": true,
+        "edit": true
+      }
+    },
+    "docs-writer": {
+      "description": "Edit-capable when SPEC permits (documentation files only).",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/docs-writer.txt}",
+      "tools": {
+        "read": true,
+        "bash": true,
+        "write": true,
+        "edit": true
+      }
+    },
+    "reviewer": {
+      "description": "Read-only. May not edit files, commit, or push.",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/reviewer.txt}",
+      "tools": {
+        "read": true,
+        "bash": false,
+        "write": false,
+        "edit": false
+      }
+    },
+    "test-runner": {
+      "description": "Edit-capable when SPEC permits (test files and fixtures only).",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/test-runner.txt}",
+      "tools": {
+        "read": true,
+        "bash": true,
+        "write": true,
+        "edit": true
       }
     }
   },
@@ -438,24 +386,6 @@
       "description": "Configure package manager",
       "template": "{file:commands/setup-pm.md}\n\n$ARGUMENTS"
     },
-    "go-review": {
-      "description": "Go code review",
-      "template": "{file:commands/go-review.md}\n\n$ARGUMENTS",
-      "agent": "go-reviewer",
-      "subtask": true
-    },
-    "go-test": {
-      "description": "Go TDD workflow",
-      "template": "{file:commands/go-test.md}\n\n$ARGUMENTS",
-      "agent": "tdd-guide",
-      "subtask": true
-    },
-    "go-build": {
-      "description": "Fix Go build errors",
-      "template": "{file:commands/go-build.md}\n\n$ARGUMENTS",
-      "agent": "go-build-resolver",
-      "subtask": true
-    },
     "skill-create": {
       "description": "Generate skills from git history",
       "template": "{file:commands/skill-create.md}\n\n$ARGUMENTS"
@@ -483,6 +413,12 @@
     "projects": {
       "description": "List known projects and instinct stats",
       "template": "{file:commands/projects.md}\n\n$ARGUMENTS"
+    }
+  },
+  "provider": {
+    "nvidia": {
+      "npm": "@ai-sdk/openai-compatible",
+      "baseURL": "https://integrate.api.nvidia.com/v1"
     }
   }
 }
